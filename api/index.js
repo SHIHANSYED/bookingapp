@@ -4,10 +4,14 @@ const mongoose =require('mongoose')
 const app= express()
 dotenv.config()
 
+const authRouter =require("./routes/auth")
+const usersRouter =require("./routes/users")
+const hotelsRouter =require("./routes/hotels")
+const roomsRouter =require("./routes/rooms")
+
 const connect = async ()=>{
    try {
     await mongoose.connect(process.env.MONGO)
-    console.log('connected to mongoDB');
   } catch (error) {
     throw error
   } 
@@ -16,8 +20,11 @@ const connect = async ()=>{
 mongoose.connection.on("connected",()=>{console.log('mongoDB connected')})
 mongoose.connection.on("disconnected",()=>{console.log('mongoDB disconnected')})
 
-app.get("/", (req,res)=>{res.send("hello welcome")})
-app.get("/users",(req,res)=>{res.send("hello user")})
+app.use('/api/auth', authRouter)
+app.use('/api/users', usersRouter)
+app.use('/api/hotels', hotelsRouter)
+app.use('/api/rooms', roomsRouter)
+
 
 
 app.listen(4000,()=>{
